@@ -2,7 +2,13 @@
 CREATE TABLE catalogue_items (
     code TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    details JSONB NOT NULL DEFAULT '{}'
+    details JSONB NOT NULL DEFAULT '{}',
+    year INTEGER NOT NULL CHECK (year >= 1900 AND year <= 2100),
+    genre TEXT NOT NULL,
+    duration INTEGER NOT NULL CHECK (duration > 0),
+    director TEXT NOT NULL,
+    description TEXT NOT NULL,
+    film_url TEXT NOT NULL DEFAULT 'https://example.com'
 );
 CREATE TABLE collections (
     code TEXT PRIMARY KEY,

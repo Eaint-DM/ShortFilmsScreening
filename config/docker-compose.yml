@@ -11,7 +11,7 @@ services:
       context: ..
       dockerfile: config/Dockerfile
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@database:5432/scenario_starter
+      DATABASE_URL: postgresql://postgres:postgres@database:5432/film%20screening
     ports: ["8000:8000"]
     depends_on:
       database:
@@ -19,17 +19,17 @@ services:
   database:
     image: postgres:18
     environment:
-      POSTGRES_DB: scenario_starter
+      POSTGRES_DB: "film screening"
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d scenario_starter"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d 'film screening'"]
       interval: 3s
       timeout: 3s
       retries: 20
     volumes:
-      - scenario-data:/var/lib/postgresql
+      - film-screening-data:/var/lib/postgresql
       - ../database/001-schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
       - ../database/002-seed.sql:/docker-entrypoint-initdb.d/002-seed.sql:ro
 volumes:
-  scenario-data:
+  film-screening-data:
