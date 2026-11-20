@@ -1,6 +1,48 @@
 # Backend
-Run through Compose from the project root as described in README.md. The container installs pyproject.toml and runs `uvicorn app.main:app --host 0.0.0.0 --port 8000` from /backend.
 
-Dependency direction: presentation -> application -> domain; application -> infrastructure. Domain and infrastructure import no other project layer. Application adapters implement domain ports; the composition root wires the service. External database access goes through DataPort. Domain scenario.py owns business validation and calculations. HTTP routes contain no business logic.
+The backend implements the S02 short-film screening programme API. Run it with
+the project Compose configuration from the project root:
 
-Health and catalogue access work with PostgreSQL. Collection routes deliberately return 501 after header/body checks. TODO: implement CollectionPort, transactional ownership checks and domain rules, scenario request/response models, error handling, then rename the generic route and JSON names to the assigned contract. A missing/empty session header is 400. A session marker is not authentication. Avoid exposing another session's entries or modifying state on validation failure.
+```sh
+docker compose -f config/docker-compose.yml up --build -d
+```
+
+The API is available at `http://127.0.0.1:8000`; OpenAPI documentation is at
+`http://127.0.0.1:8000/api/docs`.
+
+## Routes
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/films` | List the seeded film catalogue |
+| GET | `/api/films/{filmCode}` | Read one film |
+| POST | `/api/screening-programmes` | Create or return the session's programme |
+| GET | `/api/screening-programmes/{programmeCode}` | Read saved films and total minutes |
+| POST | `/api/screening-programmes/{programmeCode}/items` | Add a film with `filmCode` and `screeningCount` |
+| PUT | `/api/screening-programmes/{programmeCode}/items/{filmCode}` | Change `screeningCount` |
+| DELETE | `/api/screening-programmes/{programmeCode}/items/{filmCode}` | Remove a saved film |
+
+Send the same non-empty `X-Session-Code` header on every programme request.
+It is a mock ownership marker, not authentication. Programme reads and
+mutations are scoped by both programme code and session code; an inaccessible
+programme is reported as not found.
+
+Counts must be strict whole numbers from 1 through 3. The backend calculates
+`totalMinutes` from the saved counts and catalogue runtimes in PostgreSQL.
+Duplicate additions return HTTP 409; invalid counts return HTTP 400; unknown
+films, programmes, or saved items return HTTP 404. The adapter uses the
+existing `collections` and `collection_entries` schema and writes
+`screeningCount` to its `entry_value` column.
+
+## Layering and tests
+
+`presentation/api.py` translates HTTP requests, `application/service.py`
+coordinates use cases and result calculation, `domain/` contains the port
+contracts and pure rules, and `infrastructure/postgres.py` implements both
+database ports. `main.py` is the composition root.
+
+Run the database-independent service and domain tests from `backend/`:
+
+```sh
+python -m unittest discover -s tests
+```
