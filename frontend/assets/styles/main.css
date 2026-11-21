@@ -1,4 +1,718 @@
-body { font: 1rem/1.6 system-ui, sans-serif; color: #17324d; background: #f3f6fa; margin: 0; }
-main { max-width: 56rem; margin: 3rem auto; padding: 2rem; background: white; }
-button { margin: .4rem; padding: .6rem 1rem; cursor: pointer; }
-pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #eef2f6; padding: 1rem; }
+
+/* 
+   SCREENING STUDIO
+   COMPLETE CINEMATIC DESIGN
+ */
+
+:root {
+    --bg: #090a0d;
+    --surface: #121419;
+    --surface-light: #1b1e25;
+    --border: #292d36;
+    --text: #f5f5f5;
+    --muted: #999eaa;
+    --red: #df3545;
+    --red-hover: #b92536;
+    --gold: #c9a66b;
+    --green: #82d9ab;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    background: var(--bg);
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+/*
+   1. NAVIGATION
+ */
+
+.site-header {
+    position: relative;
+    overflow: hidden;
+    padding: 0 5%;
+    color: white;
+    background:
+        radial-gradient(
+            ellipse at 78% 60%,
+            rgba(125, 34, 48, 0.25),
+            transparent 45%
+        ),
+        linear-gradient(120deg, #08090c, #171920);
+}
+
+.top-navigation {
+    max-width: 1400px;
+    min-height: 82px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.brand {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 850;
+    letter-spacing: 2px;
+}
+
+.brand span {
+    color: var(--red);
+}
+
+.navigation-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.navigation-links a {
+    color: #b9bac1;
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+}
+
+.navigation-links a:hover {
+    color: white;
+}
+
+.scenario-tag {
+    color: var(--red);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+/* 
+   2. HERO SECTION
+ */
+
+.hero-content {
+    max-width: 1400px;
+    min-height: 480px;
+    margin: auto;
+    padding: 85px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.hero-copy {
+    max-width: 850px;
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+    color: var(--gold);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+.hero-copy .eyebrow {
+    color: #e35a62;
+}
+
+.hero-copy h1 {
+    margin: 0;
+    color: white;
+    font-size: clamp(2.6rem, 6vw, 5.3rem);
+    line-height: 1.08;
+    letter-spacing: -2px;
+}
+
+.hero-copy h1 span {
+    display: block;
+    color: #aeb1bb;
+    font-weight: 400;
+}
+
+.hero-description {
+    max-width: 570px;
+    margin: 24px 0 30px;
+    color: #aaadb7;
+    font-size: 1.05rem;
+}
+
+.hero-button {
+    display: inline-block;
+    padding: 12px 23px;
+    background: var(--red);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.hero-button:hover {
+    background: var(--red-hover);
+    transform: translateY(-2px);
+}
+
+.hero-side-note {
+    min-width: 185px;
+    padding-left: 25px;
+    border-left: 1px solid #41434a;
+}
+
+.hero-side-note span {
+    color: var(--red);
+    font-size: 2.1rem;
+    font-weight: 800;
+}
+
+.hero-side-note p {
+    color: #969aa5;
+    font-size: 0.72rem;
+    letter-spacing: 1.4px;
+}
+
+/* 
+   3. MAIN PAGE
+ */
+
+.app-container {
+    width: min(1400px, 90%);
+    margin: 55px auto 70px;
+    display: grid;
+    gap: 65px;
+}
+
+.panel {
+    min-width: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--text);
+}
+
+.panel h2 {
+    margin: 0 0 10px;
+    color: white;
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    gap: 20px;
+}
+
+.section-description {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Section separators */
+
+#film-details,
+#screening-programme,
+#programme-summary {
+    padding-top: 45px;
+    border-top: 1px solid var(--border);
+}
+
+/* 
+   4. FILM CATALOGUE
+ */
+
+.film-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.film-card {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    transition: transform 0.25s, border-color 0.25s,
+                box-shadow 0.25s;
+}
+
+.film-card:hover {
+    transform: translateY(-5px);
+    border-color: #6a3841;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+/* Temporary cinematic artwork.
+   Replace with approved poster images later. */
+
+.film-card::before {
+    content: "";
+    display: block;
+    height: 215px;
+    background:
+        linear-gradient(
+            180deg,
+            transparent 30%,
+            rgba(0,0,0,0.8)
+        ),
+        linear-gradient(135deg, #293246, #11131b);
+}
+
+.film-card:nth-child(4n+2)::before {
+    background:
+        linear-gradient(180deg, transparent 30%, #000c),
+        linear-gradient(135deg, #574239, #15171e);
+}
+
+.film-card:nth-child(4n+3)::before {
+    background:
+        linear-gradient(180deg, transparent 30%, #000c),
+        linear-gradient(135deg, #34505a, #11131b);
+}
+
+.film-card:nth-child(4n+4)::before {
+    background:
+        linear-gradient(180deg, transparent 30%, #000c),
+        linear-gradient(135deg, #593440, #15131a);
+}
+
+.film-card-content {
+    padding: 17px;
+}
+
+.film-card h3 {
+    margin: 0 0 10px;
+    color: white;
+    font-size: 1.08rem;
+    line-height: 1.35;
+}
+
+.film-meta {
+    margin: 7px 0;
+    color: var(--muted);
+    font-size: 0.83rem;
+}
+
+/* 
+   5. BUTTONS
+ */
+
+button {
+    padding: 10px 17px;
+    border: 0;
+    border-radius: 5px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--red);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--red-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #292d36;
+    color: white;
+}
+
+.btn-danger {
+    background: #54252c;
+    color: #ff9ca4;
+}
+
+.btn-danger:hover {
+    background: #75303a;
+}
+
+/* 
+   6. FILM DETAILS
+ */
+
+#film-details-content {
+    min-height: 80px;
+    margin-top: 20px;
+    padding: 26px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
+
+#film-details-content h3 {
+    margin: 0 0 22px;
+    color: white;
+    font-size: 1.7rem;
+}
+
+.film-detail-info {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.film-detail-item {
+    padding: 16px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+}
+
+.film-detail-item span {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.film-detail-item strong {
+    color: white;
+}
+
+#film-details-content > p {
+    color: #c2c4ca;
+}
+
+#film-details-content a {
+    color: #ed707a;
+    text-decoration: none;
+}
+
+#film-details-content a:hover {
+    text-decoration: underline;
+}
+
+/* 
+   7. SCREENING PROGRAMME
+ */
+
+#programme-list {
+    overflow-x: auto;
+    margin-top: 22px;
+    padding: 10px 0;
+}
+
+.programme-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    min-width: 600px;
+}
+
+.programme-table th {
+    padding: 15px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.77rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.programme-table td {
+    padding: 17px 15px;
+    color: #e5e5e8;
+    border-bottom: 1px solid var(--border);
+}
+
+.programme-table tbody tr:hover {
+    background: var(--surface);
+}
+
+.programme-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quantity-input {
+    width: 70px;
+    padding: 9px;
+    background: var(--surface-light);
+    color: white;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+}
+
+/* 
+   8. PROGRAMME SUMMARY
+ */
+
+.summary-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    padding: 35px;
+    background:
+        radial-gradient(
+            circle at 90% 50%,
+            rgba(190,40,55,0.2),
+            transparent 45%
+        ),
+        var(--surface);
+    border: 1px solid #343039;
+    border-radius: 10px;
+}
+
+.summary-panel h2 {
+    color: white;
+}
+
+.summary-panel .eyebrow {
+    color: #e35a62;
+}
+
+.total-duration {
+    margin: 0;
+    color: #ff7a82;
+    font-size: 2.3rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* 
+   9. EMPTY STATES
+ */
+
+.empty-state {
+    padding: 35px 20px;
+    background: var(--surface);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* 
+   10. SUCCESS / ERROR MESSAGES
+ */
+
+.app-message:empty {
+    display: none;
+}
+
+.app-message {
+    padding: 14px 18px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+}
+
+.app-message.success {
+    background: #132b21;
+    border-color: #285a42;
+    color: #9be0b7;
+}
+
+.app-message.error {
+    background: #35191d;
+    border-color: #71323a;
+    color: #ff9ca4;
+}
+
+.app-message.info {
+    background: #1b2639;
+    border-color: #344b70;
+    color: #b3caff;
+}
+
+/* 
+   11. DEVELOPER DIAGNOSTICS
+ */
+
+.developer-tools {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+}
+
+.developer-tools summary {
+    cursor: pointer;
+    font-weight: 650;
+}
+
+.developer-tools button {
+    margin: 12px 6px 8px 0;
+}
+
+#output,
+pre {
+    padding: 16px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    background: #08090c;
+    color: #d7d9df;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+}
+
+/* 
+   12. RESPONSIVE DESIGN
+ */
+
+@media (max-width: 1050px) {
+    .film-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .hero-side-note {
+        display: none;
+    }
+}
+
+@media (max-width: 750px) {
+    .top-navigation {
+        flex-wrap: wrap;
+        padding: 18px 0;
+    }
+
+    .navigation-links {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .hero-content {
+        min-height: auto;
+        padding: 65px 0;
+    }
+
+    .film-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .film-detail-info {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 500px) {
+    .app-container {
+        width: 92%;
+        margin-top: 35px;
+        gap: 45px;
+    }
+
+    .film-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .film-card::before {
+        height: 230px;
+    }
+
+    .film-detail-info {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-panel {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .total-duration {
+        font-size: 1.8rem;
+    }
+
+    .hero-copy h1 {
+        letter-spacing: -1px;
+    }
+}
+/* Screening count controls */
+.screening-count-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.add-film-button {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.add-film-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+
+/* 
+   PROGRAMME ACTION CONTROLS
+ */
+
+.programme-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.programme-controls button {
+    padding: 9px 14px;
+    font-size: 0.8rem;
+}
+
+.programme-table td {
+    vertical-align: middle;
+}
+
+.programme-table .film-meta {
+    margin: 4px 0 0;
+}
+
+.programme-table strong {
+    color: white;
+}
+
+.programme-table .quantity-input {
+    width: 75px;
+    padding: 10px;
+}
+
+.programme-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
