@@ -1,7 +1,139 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AA-02 scenario starter</title><link rel="stylesheet" href="assets/styles/main.css"></head>
-<body><main><h1>AA-02 scenario starter</h1><p>Bootstrap only. Implement the assigned scenario before submitting.</p>
-<p id="session"></p><button id="health">Check connection</button><button id="catalogue">Load bootstrap catalogue</button><button id="collection">Try collection TODO</button>
-<p id="status" role="status"></p><pre id="output"></pre>
-<section><h2>Scenario workflow TODO</h2><p>Add catalogue details and collection add/edit/remove controls. Retain the returned collection code; display saved entries and server-calculated results after each mutation. Use your scenario's field names, units and limits.</p></section>
-</main><script type="module" src="scripts/index.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screening Studio | Short Film Planner</title>
+    <link rel="stylesheet" href="assets/styles/main.css">
+</head>
+
+<body>
+    
+<!-- Cinematic Website Header -->
+<header class="site-header">
+    <nav class="top-navigation">
+        <a href="#" class="brand">
+            SCREENING<span>STUDIO</span>
+        </a>
+        <div class="navigation-links">
+            <a href="#film-catalogue">Films</a>
+            <a href="#film-details">Film Details</a>
+            <a href="#screening-programme">My Programme</a>
+        </div>
+        <span class="scenario-tag">AA-02 · S02</span>
+    </nav>
+
+    <div class="hero-content">
+        <div class="hero-copy">
+            <p class="eyebrow">
+                SHORT-FILM SCREENING PROGRAMME
+            </p>
+            <h1>
+                Stories worth watching.
+                <span>Programmes worth planning.</span>
+            </h1>
+            <p class="hero-description">
+                Explore a collection of short films,
+                discover their stories and build your
+                own screening programme.
+            </p>
+            <a href="#film-catalogue" class="hero-button">
+                Explore Films →
+            </a>
+        </div>
+        <div class="hero-side-note">
+            <span id="film-count">--</span>
+            <p>SHORT FILMS</p>
+            <p>ONE SCREENING PROGRAMME</p>
+        </div>
+    </div>
+</header>
+
+    <main class="app-container">
+        <!-- 2. Film Catalogue -->
+        <section class="panel" id="film-catalogue">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">DISCOVER</p>
+                    <h2>Available Films</h2>
+                    <p class="section-description">
+                        Browse the available short films.
+                    </p>
+                </div>
+            </div>
+            <!-- JavaScript will insert film cards here -->
+            <div id="film-list" class="film-grid" aria-live="polite">
+                <p class="empty-state">
+                    The film catalogue will appear here.
+                </p>
+            </div>
+        </section>
+        <!-- 3. Film Details -->
+        <section class="panel" id="film-details">
+            <p class="eyebrow">FILM INFORMATION</p>
+            <h2>Film Details</h2>
+            <!-- Selected film information will appear here -->
+            <div id="film-details-content">
+                <p class="empty-state">
+                    Select a film to view its details.
+                </p>
+            </div>
+        </section>
+        <!-- 4. Screening Programme -->
+        <section class="panel" id="screening-programme">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">YOUR SELECTION</p>
+                    <h2>My Screening Programme</h2>
+                    <p class="section-description">
+                        Manage the films included in your programme.
+                    </p>
+                </div>
+            </div>
+            <!-- Selected films will appear here -->
+            <div id="programme-list" aria-live="polite">
+                <p class="empty-state">
+                    Your screening programme is currently empty.
+                </p>
+            </div>
+        </section>
+        <!-- 5. Programme Summary -->
+        <section class="panel summary-panel" id="programme-summary">
+            <div>
+                <p class="eyebrow">PROGRAMME SUMMARY</p>
+                <h2>Total Viewing Time</h2>
+            </div>
+            <!-- Backend-calculated total will appear here -->
+            <p id="programme-total" class="total-duration">
+                -- minutes
+            </p>
+        </section>
+        <!-- 6. Application Feedback -->
+        <div
+            id="app-message"
+            class="app-message"
+            role="status"
+            aria-live="polite">
+        </div>
+        <!-- 7. Existing Starter Diagnostics -->
+        <details class="developer-tools">
+            <summary>Developer Diagnostics</summary>
+            <!-- Keep these IDs because index.js currently uses them -->
+            <p id="session"></p>
+            <button id="health">
+                Check connection
+            </button>
+            <button id="catalogue">
+                Load bootstrap catalogue
+            </button>
+            <button id="collection">
+                Try collection TODO
+            </button>
+            <p id="status" role="status"></p>
+            <pre id="output"></pre>
+        </details>
+    </main>
+    <!-- Existing JavaScript entry point -->
+    <script type="module" src="scripts/index.js"></script>
+</body>
+</html>
