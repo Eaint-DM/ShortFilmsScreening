@@ -1,7 +1,5 @@
 # Integration Evidence
 
-Template only: no student implementation or completed evidence is supplied. Replace every TODO with actual observations. Include only assets you reference, using local relative links.
-
 ## Integrated Workflow
 
 **Sai Thit Swan Thu role and test date:** I implemented and exercised the browser-facing screening-programme workflow on 21 November 2026 using the local application at `http://127.0.0.1:8080`.
@@ -34,7 +32,18 @@ The screening-count input is restricted in the interface to whole-number values 
 
 ## Backend API Evidence
 
-TODO: Record your actual work, date, reproducible steps, expected and observed results, and relevant supporting evidence.
+**Local API retest — 21 November 2026:** I sent these requests through the Nginx same-origin `/api` proxy on the [running Screening Studio UI](http://127.0.0.1:8080/?source=integration-evidence), using one `X-Session-Code` for all programme operations. If an already-open tab still shows the starter page, reopen this link or hard-refresh it. The test programme was `PRG-6f6ccb957207420786286dc1bbccc5f8`.
+
+| Request | Expected result | Observed result |
+|---|---|---|
+| `POST /screening-programmes/{programmeCode}/items` for `FILM-001` with count 1 | Save Next Floor and return its runtime-based total. | Response body showed `screeningCount: 1` and `totalMinutes: 12`. |
+| `POST /screening-programmes/{programmeCode}/items` for `FILM-002` with count 1 | Save Alike and return both entries. | Response showed Next Floor × 1, Alike × 1 and `totalMinutes: 20`. |
+| `PUT /screening-programmes/{programmeCode}/items/FILM-001` with `{"screeningCount":2}` | Update Next Floor and recalculate the total. | Response showed Next Floor × 2, Alike × 1 and `totalMinutes: 32`. |
+| `DELETE /screening-programmes/{programmeCode}/items/FILM-002` | Remove Alike and recalculate the total. | Response showed only Next Floor × 2 and `totalMinutes: 24`. |
+| `PUT /screening-programmes/{programmeCode}/items/FILM-001` with `{"screeningCount":0}` | Reject the invalid count without changing saved data. | HTTP 400 with `error_code: INVALID_REQUEST` and `screening_count must be between 1 and 3`. |
+| `GET /screening-programmes/{programmeCode}` after the rejected update | Return the unchanged saved programme. | Response body showed only FILM-001 at count 2 and `totalMinutes: 24`. |
+
+These are the observed response summaries from the local API run; the earlier browser and Network-panel captures are linked in [Testing and Debugging Evidence](testing-debugging-evidence.md).
 
 ## Database Evidence
 

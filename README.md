@@ -1,16 +1,22 @@
-# AA-02 scenario starter
+# AA-02 S02 — Short-Film Screening Programme
 
 ## Project Overview
 
-Runnable Python/PostgreSQL/JavaScript/Nginx bootstrap for any assigned S01-S20 scenario. It includes neutral catalogue connectivity and explicit TODO boundaries. It is not a completed assessment solution. TODO: enter the assigned scenario ID, title and application purpose.
+This application supports the S02 short-film screening programme. A film-club organiser can browse the seeded catalogue, inspect film details, and add, update, or remove films in a session-owned programme. The backend calculates total viewing time from each film's stored runtime and screening count.
 
 ## Group Members
 
-TODO: record all three students' IDs, names and actual contributions here and in submission-manifest.yml. Replace its group and scenario placeholders before submission.
+The group members and their contribution areas are:
+
+| Student ID | Name | Contribution area |
+| --- | --- | --- |
+| 6804860018  | Sai Thit Swan Thu  | Frontend implementation |
+| 6704860018  | Eaint Myint Mon  | Backend business logic and API backend |
+| 6704860010  | Lakshya Timsina Chhetri  | Database, Docker, integration and testing database |
 
 ## Technology Stack
 
-Python 3.14, FastAPI, psycopg, PostgreSQL 18, vanilla JavaScript and Nginx. Docker Compose v2 with `include` support is required. No Node build step is needed. Python dependencies are installed in the backend container.
+Python 3.14, FastAPI, psycopg, PostgreSQL 18, vanilla JavaScript and Nginx. Docker Compose v2 is used to run the services. No Node build step is needed; Python dependencies are installed in the backend container.
 
 ## Setup Instructions
 
@@ -19,52 +25,54 @@ Python 3.14, FastAPI, psycopg, PostgreSQL 18, vanilla JavaScript and Nginx. Dock
 3. Run `docker compose -f config/docker-compose.yml config` to verify resolved configuration.
 4. Run the startup command below. Ports 8080 and 8000 must be free. Local development database credentials are in config/docker-compose.yml; do not use them for a public deployment.
 
+**Local verification — 21 November 2026:** I verified the resolved configuration with `docker --context rancher-desktop compose -f config/docker-compose.yml config`. After `up --build -d`, `ps` showed the frontend and backend running and the database healthy. This run used an existing database volume; first-time SQL initialization was not retested.
+
 The first startup initialises database/001-schema.sql and 002-seed.sql on a new Compose volume. Later edits to SQL files do not automatically update an existing database. Apply a reviewed migration, or use a fresh project name for a disposable development run. Do not remove a volume containing work you need.
 
 ## Run Instructions
 
 ```sh
-docker compose -f config/docker-compose.yml up --build -d
-docker compose -f config/docker-compose.yml ps
-docker compose -f config/docker-compose.yml logs backend database
+docker --context rancher-desktop compose -f config/docker-compose.yml up --build -d
+docker --context rancher-desktop compose -f config/docker-compose.yml ps
+docker --context rancher-desktop compose -f config/docker-compose.yml logs backend database
 ```
 
-Open http://127.0.0.1:8080 and select **Check connection** and **Load bootstrap catalogue**. The first checks API-to-database connectivity; the second reads SAMPLE-001 from PostgreSQL. **Try collection TODO** deliberately reports SCENARIO_TODO (HTTP 501). Use the same-origin frontend URL for API calls so the Nginx proxy is exercised. API documentation is at http://127.0.0.1:8000/api/docs.
+Open http://127.0.0.1:8080. The page loads the film catalogue and initializes the current browser session's screening programme. Use **View details** on a film to see its information; use the screening-count field and **Add to programme** to add it. The programme supports updating counts and removing films, and displays the total returned by the backend. The **Developer Diagnostics** panel provides health and catalogue checks. API documentation is at http://127.0.0.1:8000/api/docs.
 
 In Windows PowerShell, use `curl.exe` instead of `curl` to avoid the older alias.
 
 ```sh
-curl http://127.0.0.1:8080/api/health
-curl http://127.0.0.1:8080/api/catalogue
-curl http://127.0.0.1:8000/api/catalogue/SAMPLE-001
-docker compose -f config/docker-compose.yml exec -T database psql -U postgres -d scenario_starter -c "SELECT code, name FROM catalogue_items;"
-docker compose -f config/docker-compose.yml down
+curl --fail http://127.0.0.1:8080/api/health
+curl --fail http://127.0.0.1:8080/api/films
+curl --fail http://127.0.0.1:8000/api/films/FILM-001
+docker --context rancher-desktop compose -f config/docker-compose.yml exec -T database psql -U postgres -d "film screening" -c "SELECT code, name, duration FROM catalogue_items;"
+docker --context rancher-desktop compose -f config/docker-compose.yml down
 ```
 
-`down` stops this project's services and keeps its database volume. Root docker-compose.yml and docker-compose.mac.yml include the same portable config for older command habits. Use one project name/config consistently; do not start multiple copies on the same ports.
+`down` stops this project's services and keeps its database volume. Root `docker-compose.yml` and `docker-compose.mac.yml` include the same portable config for older command habits. Use one project name/config consistently; do not start multiple copies on the same ports.
 
 ## API Endpoints
 
-| Method/path | Bootstrap behaviour |
+| Method/path | Behaviour |
 | --- | --- |
-| GET /api/health | Checks PostgreSQL; reports bootstrap scope |
-| GET /api/catalogue | Reads neutral seed data |
-| GET /api/catalogue/{item_code} | Reads one seed; unknown code is 404 |
-| POST /api/collections | TODO: create or return session-owned collection (501) |
-| GET /api/collections/{collection_code} | TODO: read owned saved entries/result (501) |
-| POST /api/collections/{collection_code}/items | TODO: add validated entry (501) |
-| PUT /api/collections/{collection_code}/items/{item_code} | TODO: edit validated entry (501) |
-| DELETE /api/collections/{collection_code}/items/{item_code} | TODO: remove entry (501) |
+| GET /api/health | Checks PostgreSQL connectivity |
+| GET /api/films | Lists the seeded short-film catalogue |
+| GET /api/films/{filmCode} | Reads one film's details |
+| POST /api/screening-programmes | Creates or returns the programme for X-Session-Code |
+| GET /api/screening-programmes/{programmeCode} | Reads saved films and server-calculated total minutes |
+| POST /api/screening-programmes/{programmeCode}/items | Adds a film with a screening count |
+| PUT /api/screening-programmes/{programmeCode}/items/{filmCode} | Updates a film's screening count |
+| DELETE /api/screening-programmes/{programmeCode}/items/{filmCode} | Removes a film from the programme |
 
-Collection stubs require a non-empty X-Session-Code; missing/empty headers and malformed bodies receive 400. No collection identity, persistence, ownership enforcement or calculation is supplied by these stubs. Replace generic paths, DTOs, fields and seeds with your scenario's exact names. See [REQUIREMENTS.md](REQUIREMENTS.md) for adaptation points and all scenario families.
+Programme requests require the same non-empty `X-Session-Code`. Screening counts must be whole numbers from 1 through 3. The server calculates `totalMinutes` using the catalogue runtimes. Invalid counts return HTTP 400, duplicate additions return HTTP 409, and unknown or inaccessible films/programmes/items return HTTP 404. The session code is a mock ownership marker, not authentication.
 
 ## Known Limitations
 
-TODO: record actual limitations after implementation. The bootstrap has no completed scenario workflow, mutation logic, domain validation, result calculation or student evidence. Its mock session is not authentication, and a new page load creates a new code. It has no payment, checkout, hardware control, mapping or scheduling features. A startup smoke check does not prove the assigned scenario or its evidence is complete.
+The browser creates a new mock session code on page load; reloading the page does not resume a previous session's programme. The code is not authentication, and the application is a local S02 coursework project rather than a production service. Verify the member IDs and contribution records in `submission-manifest.yml`, and add any other sources or AI tools if they are used later.
 
-Required evidence templates are in evidence/. Fill every heading using actual success/error observations, a genuine issue/fix/retest and individual contributions. Acknowledge sources, libraries, examples and required AI use, including incorporated output and verification/modification. Supply screenshots, exports or logs only when your evidence references them. The brief's malformed contribution link is interpreted as the local evidence/contribution-evidence.md path, consistent with its Required Evidence Files and Submission Requirements.
+The required integration, testing/debugging and contribution records are in `evidence/`. Review each member's attribution and ensure every claim reflects actual work. Acknowledge sources, libraries, examples and AI use, including incorporated output and how it was verified or modified. Keep screenshot and other evidence links relative to the document that references them.
 
-Complete the manifest and actual evidence; the presence of templates alone does not meet assessment expectations. Follow [INSTRUCTION.md](INSTRUCTION.md) for the full numbered workflow from group formation through Canvas upload.
+Before submission, complete and verify the manifest and evidence, then follow [INSTRUCTION.md](INSTRUCTION.md) for the full workflow from group formation through Canvas upload.
 
 ## Local submission checker
 

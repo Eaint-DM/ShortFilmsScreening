@@ -7,13 +7,17 @@ the project Compose configuration from the project root:
 docker compose -f config/docker-compose.yml up --build -d
 ```
 
-The API is available at `http://127.0.0.1:8000`; OpenAPI documentation is at
-`http://127.0.0.1:8000/api/docs`.
+The API server listens at `http://127.0.0.1:8000`; its root path (`/`) is not
+an API endpoint, so opening the base URL returns `{"detail":"Not Found"}`.
+API routes are under `/api`. Check availability at
+`http://127.0.0.1:8000/api/health` and open the interactive OpenAPI
+documentation at `http://127.0.0.1:8000/api/docs`.
 
 ## Routes
 
 | Method | Path | Purpose |
 | --- | --- | --- |
+| GET | `/api/health` | Check API and database availability |
 | GET | `/api/films` | List the seeded film catalogue |
 | GET | `/api/films/{filmCode}` | Read one film |
 | POST | `/api/screening-programmes` | Create or return the session's programme |
@@ -44,5 +48,7 @@ database ports. `main.py` is the composition root.
 Run the database-independent service and domain tests from `backend/`:
 
 ```sh
-python -m unittest discover -s tests
+python3 -m unittest discover -s tests
 ```
+
+Verified on 21 November 2026: all 5 tests passed.

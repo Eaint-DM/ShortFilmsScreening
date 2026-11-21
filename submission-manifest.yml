@@ -2,12 +2,12 @@ assessment:
   id: "additional-assessment-02"
   title: "Integration, Containerisation, and Testing Readiness Demonstration"
 group:
-  id: "TODO-GroupID"
+  id: "13"
   members:
-    - student_id: "TODO-StudentID-1"
+    - student_id: "6704860018"
       name: "Eaint Myint Mon"
-      contribution_summary: "Backend Development"
-    - student_id: "TODO-StudentID-2"
+      contribution_summary: "Backend business logic and API backend"
+    - student_id: "6804860018"
       name: "Sai Thit Swan Thu"
       contribution_summary: "Frontend Development"
     - student_id: "6704860010"
