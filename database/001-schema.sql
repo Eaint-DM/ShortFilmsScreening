@@ -17,8 +17,6 @@ CREATE TABLE collections (
 CREATE TABLE collection_entries (
     collection_code TEXT NOT NULL REFERENCES collections(code),
     item_code TEXT NOT NULL REFERENCES catalogue_items(code),
-    -- TODO: scenario-specific field, strict whole number and inclusive bounds.
-    entry_value INTEGER NOT NULL,
+    entry_value INTEGER NOT NULL CHECK (entry_value BETWEEN 1 AND 3),
     PRIMARY KEY (collection_code, item_code)
 );
--- Do not assume zero removes an entry; DELETE is separate.

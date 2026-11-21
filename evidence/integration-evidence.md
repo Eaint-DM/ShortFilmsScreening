@@ -38,7 +38,50 @@ TODO: Record your actual work, date, reproducible steps, expected and observed r
 
 ## Database Evidence
 
-TODO: Record your actual work, date, reproducible steps, expected and observed results, and relevant supporting evidence.
+**Lakshya Timsina Chhetri — 21 November 2026:**
+
+I adapted `database/001-schema.sql` for the S02 screening programme. The
+`catalogue_items` table stores film details, `collections` stores each
+programme and its unique session code, and `collection_entries` links a
+programme to its selected films. Foreign keys keep entries tied to existing
+programmes and catalogue films, and the composite primary key prevents a film
+from being added to the same programme more than once.
+
+### Added Fields
+
+- **`catalogue_items`**
+  - `code` — `TEXT`, primary key.
+  - `name` — `TEXT NOT NULL`.
+  - `details` — `JSONB NOT NULL`, default `{}`.
+  - `year` — `INTEGER`, constrained to 1900–2100.
+  - `genre` — `TEXT NOT NULL`.
+  - `duration` — `INTEGER`, constrained to be greater than 0; stores runtime in minutes.
+  - `director` — `TEXT NOT NULL`.
+  - `description` — `TEXT NOT NULL`.
+  - `film_url` — `TEXT NOT NULL`, default `https://example.com`.
+- **`collections`**
+  - `code` — `TEXT`, primary key.
+  - `session_code` — `TEXT NOT NULL UNIQUE`.
+- **`collection_entries`**
+  - `collection_code` — `TEXT NOT NULL`, foreign key to `collections.code`.
+  - `item_code` — `TEXT NOT NULL`, foreign key to `catalogue_items.code`.
+  - `entry_value` — `INTEGER NOT NULL`, constrained to 1–3 inclusive; stores screening count.
+  - `(collection_code, item_code)` — composite primary key.
+
+### Seed Data
+
+`database/002-seed.sql` inserts 20 catalogue films into `catalogue_items`,
+providing each row's `code`, `name`, `year`, `genre`, `duration`, `director`,
+`description`, and `film_url`. The `details` column is omitted and uses its
+schema default. Programme/session rows and screening entries are not seeded;
+they are created and saved as users use the application.
+
+
+**Schema check:** I reviewed the table definitions and constraint in
+`database/001-schema.sql` against the S02 requirement of 1–3 screenings per
+film. The schema defines the expected foreign keys, uniqueness, and count
+bounds. Docker Compose mounts both SQL files into PostgreSQL's initialization
+directory, so they are applied when the database volume is first initialized.
 
 ## Success Case
 
