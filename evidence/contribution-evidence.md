@@ -37,15 +37,6 @@ I also ran the four S02 browser/API evidence cases using the same mock session. 
 
 I documented my testing/debugging work in `evidence/testing-debugging-evidence.md` and my frontend portion of the integration work in `evidence/integration-evidence.md`.
 
-My relevant Git history is:
-
-| Work | Branch / commit | Integration into `main` |
-|---|---|---|
-| S02 frontend implementation | `frontend/s02-screening-ui` — `2d7eac8` (`Complete S02 screening programme frontend`) | Pull Request #1, merged |
-| Testing and debugging evidence | `evidence/c08-testing-debugging` — `7758e43` (`Add S02 testing and debugging evidence`) | Pull Request #2, merged |
-| Frontend integration evidence | `evidence/c07-frontend-integration` — `3036471` (`Add S02 frontend integration evidence`) | Pull Request #3, merged |
-
-The merged branch history is visible in the repository's `main` branch. The commit and pull-request references identify my changes; they do not claim authorship of the backend, database, or configuration implementation.
 
 
 **Contributer:** Lakshya Timsina Chhetri
@@ -88,6 +79,16 @@ The following screenshots provide examples of the work and its verification:
 - [Programme after removing Alike](<screenshots/test-03-remove-alike-ui 6.19.49 AM.png>)
 - [Frontend validation for a zero screening count](<screenshots/test-04-frontend-validation 6.23.08 AM.png>)
 - [Backend rejection and follow-up programme verification](<screenshots/test-04-backend-validation-and-verification 6.29.03 AM.png>)
+
+My relevant Git history is:
+
+| Work | Branch / commit | Integration into `main` |
+|---|---|---|
+| S02 frontend implementation | `frontend/s02-screening-ui` — `2d7eac8` (`Complete S02 screening programme frontend`) | Pull Request #1, merged |
+| Testing and debugging evidence | `evidence/c08-testing-debugging` — `7758e43` (`Add S02 testing and debugging evidence`) | Pull Request #2, merged |
+| Frontend integration evidence | `evidence/c07-frontend-integration` — `3036471` (`Add S02 frontend integration evidence`) | Pull Request #3, merged |
+
+The merged branch history is visible in the repository's `main` branch. The commit and pull-request references identify my changes; they do not claim authorship of the backend, database, or configuration implementation.
 
 **Eaint Myint Mon — backend business logic and API backend**
 
