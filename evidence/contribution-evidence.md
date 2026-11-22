@@ -2,6 +2,25 @@
 
 ## Contribution Summary
 
+**Contributor:** Eaint Myint Mon  
+**Contribution area:** Backend business logic and API implementation  
+**Work and verification date:** 21 November 2026
+
+I implemented the server-side S02 screening-programme workflow in the backend. My work includes the FastAPI routes, application service, domain validation and calculation rules, persistence ports, PostgreSQL adapter, and database-independent service tests. I also reviewed the frontend/API route mismatch and added backend and documentation changes to align the API with the S02 UI.
+
+My implementation work is in:
+
+- `backend/app/presentation/api.py` and `backend/app/main.py` — health, catalogue, and screening-programme routes; HTTP status and error translation; application startup.
+- `backend/app/application/service.py` — programme creation and retrieval, catalogue lookup, add/update/remove operations, session ownership checks, and duplicate/not-found handling.
+- `backend/app/domain/scenario.py` — screening-count validation and calculation of programme duration from stored film runtimes.
+- `backend/app/domain/ports.py` and `backend/app/infrastructure/postgres.py` — application data contracts and PostgreSQL persistence.
+- `backend/tests/test_service.py` — service-level tests for catalogue fields, programme operations, validation, duplicate films, totals, and session ownership.
+- `backend/README.md` — API route and local test documentation.
+
+I verified this work against the FastAPI application, in-memory service tests, Docker-backed API responses, and the repository submission structure. The backend rejected invalid counts as HTTP 400 and returned the saved screening count and server-calculated total minutes for valid operations.
+
+
+
 **Contributor:** Sai Thit Swan Thu  
 **Contribution area:** Frontend implementation, frontend-to-API integration, browser workflow testing, and frontend/testing evidence  
 **Work and verification date:** 21 November 2026
@@ -63,6 +82,35 @@ My individual work was to implement and verify the S02 backend workflow. The spe
 
 The service tests use in-memory fakes to verify business behaviour independently of PostgreSQL. The backend changes build on the project’s existing database schema and seeded film data.
 
+**Reproducible verification — 21 November 2026**
+
+From `backend/`, I ran:
+
+```sh
+python3 -m unittest discover -s tests
+```
+
+The observed result was `Ran 5 tests ... OK`. This verifies the database-independent service workflow, including the expected 20-minute add result, 32-minute update result, 24-minute remove result, unchanged state after invalid counts, and rejection of duplicate films or foreign sessions.
+
+I also ran the Docker Compose application locally and checked the API/OpenAPI routes and service responses. Valid programme operations returned the saved items and server-calculated `totalMinutes`; an invalid screening count was rejected with HTTP 400. These results also exercised the existing PostgreSQL persistence adapter and seeded catalogue data.
+
+**Endpoint verification — 21 November 2026**
+
+The following commands were used or reproduced for the locally running application. For programme commands, replace `<mock-session-code>` with the same non-empty `X-Session-Code` value used for every request in that session. `PRG-732f97ef27b3476d9ef20e41b5bdc03a` is the programme code recorded in the testing evidence.
+
+| Endpoint and command | Observed or implementation-defined result |
+|---|---|
+| **Health check**<br>`curl -i http://127.0.0.1:8080/api/health` | Implemented database connectivity check. A successful response is HTTP 200 with `{"status":"ok","database":"connected"}`. |
+| **Load catalogue**<br>`curl -i http://127.0.0.1:8080/api/films` | Catalogue request was observed successfully; the frontend loaded the seeded films. |
+| **Load one film**<br>`curl -i http://127.0.0.1:8080/api/films/FILM-001` | Retrieved the FILM-001 record. Unknown codes are implemented to return HTTP 404. |
+| **Create or retrieve programme**<br>`curl -i -X POST http://127.0.0.1:8080/api/screening-programmes -H "X-Session-Code: <mock-session-code>"` | Returned HTTP 200 and a `programmeCode` for the mock session. The testing evidence used `PRG-732f97ef27b3476d9ef20e41b5bdc03a`. |
+| **Retrieve programme**<br>`curl -i http://127.0.0.1:8080/api/screening-programmes/PRG-732f97ef27b3476d9ef20e41b5bdc03a -H "X-Session-Code: <mock-session-code>"` | Verified HTTP 200 after add, update, remove, and invalid-update operations. The successful states returned `totalMinutes` of 20, 32, and 24 respectively. |
+| **Add FILM-001**<br>`curl -i -X POST http://127.0.0.1:8080/api/screening-programmes/PRG-732f97ef27b3476d9ef20e41b5bdc03a/items -H "X-Session-Code: <mock-session-code>" -H "Content-Type: application/json" -d '{"filmCode":"FILM-001","screeningCount":1}'` | HTTP 200 and returned the saved programme with FILM-001 at count 1 and `totalMinutes: 12`. |
+| **Add FILM-002**<br>`curl -i -X POST http://127.0.0.1:8080/api/screening-programmes/PRG-732f97ef27b3476d9ef20e41b5bdc03a/items -H "X-Session-Code: <mock-session-code>" -H "Content-Type: application/json" -d '{"filmCode":"FILM-002","screeningCount":1}'` | HTTP 200 and returned both saved entries with `totalMinutes: 20`. Readding the same film is implemented to return HTTP 409. |
+| **Update screening count**<br>`curl -i -X PUT http://127.0.0.1:8080/api/screening-programmes/PRG-732f97ef27b3476d9ef20e41b5bdc03a/items/FILM-001 -H "X-Session-Code: <mock-session-code>" -H "Content-Type: application/json" -d '{"screeningCount":2}'` | HTTP 200 and returned FILM-001 at count 2, FILM-002 at count 1, and `totalMinutes: 32`. |
+| **Reject invalid count**<br>`curl -i -X PUT http://127.0.0.1:8080/api/screening-programmes/PRG-732f97ef27b3476d9ef20e41b5bdc03a/items/FILM-001 -H "X-Session-Code: <mock-session-code>" -H "Content-Type: application/json" -d '{"screeningCount":0}'` | HTTP 400 with `error_code: INVALID_REQUEST` and `screening_count must be between 1 and 3`. The follow-up programme GET showed FILM-001 unchanged at count 2 and `totalMinutes: 24`. |
+| **Remove FILM-002**<br>`curl -i -X DELETE http://127.0.0.1:8080/api/screening-programmes/PRG-732f97ef27b3476d9ef20e41b5bdc03a/items/FILM-002 -H "X-Session-Code: <mock-session-code>"` | HTTP 200 and returned only FILM-001 at count 2 and `totalMinutes: 24`. Unknown or inaccessible programmes/items are implemented to return HTTP 404. |
+
 My relevant Git history is:
 
 | Work | Commit |
@@ -88,6 +136,21 @@ My relevant Git history is:
   initialization.
 
 ## Research or Technology Decisions
+
+**By Eaint Myint Mon**
+
+I used the existing FastAPI, psycopg, and PostgreSQL architecture because it matched the supplied project structure and avoided adding an unnecessary framework or service. The backend is organised into presentation, application, domain, and infrastructure layers:
+
+- `backend/app/presentation/` exposes HTTP routes and translates application outcomes into API responses.
+- `backend/app/application/service.py` coordinates the S02 workflow and keeps persistence details behind the repository interfaces.
+- `backend/app/domain/scenario.py` owns the screening-count bounds and server-calculated duration rule.
+- `backend/app/infrastructure/postgres.py` implements the persistence contract for PostgreSQL.
+
+I researched and tested the mismatch between the supplied frontend requests and the S02 backend paths. I traced the route names through `frontend/scripts/index.js`, `backend/app/presentation/api.py`, and the FastAPI documentation, then used the existing `/api/screening-programmes` resource shape rather than introducing separate endpoints or a different session mechanism.
+
+The mock session code remains the existing `X-Session-Code` header described by the starter and scenario. I retained this approach because it provides repeatable local ownership isolation without presenting it as authentication. Screening counts are validated as whole numbers from 1 through 3, and totals are calculated by the backend from saved counts and catalogue runtimes so that the browser does not become the authority for the final result.
+
+I chose database-independent service tests with in-memory fakes for the domain/application behaviour. PostgreSQL-backed route checks and Docker Compose runs were used separately to verify persistence and HTTP integration.
 
 **By Sai Thit Swan Thu**
 
