@@ -47,6 +47,23 @@ My relevant Git history is:
 
 The merged branch history is visible in the repository's `main` branch. The commit and pull-request references identify my changes; they do not claim authorship of the backend, database, or configuration implementation.
 
+**Contributer:** Lakshya Timsina Chhetri
+**Contribution area:** Data base Schema and Seed.  
+**Work and verification date:** 19 November 2026
+ 
+I adapted the database schema for the S02 screening programme and added the
+JSON-formatted catalogue seed data. I configured the catalogue fields and
+constraints, linked programme entries to films and mock sessions, and verified
+the seed records through the database-backed application.
+
+My implementation work is in:
+
+- `database/001-schema.sql` — adapted the catalogue, session-owned programme,
+  and programme-entry tables for the S02 screening workflow, including
+  primary keys, foreign keys, and data constraints.
+- `database/002-seed.sql` — added and formatted 20 seeded catalogue films with
+  codes, titles, years, genres, runtimes, directors, descriptions, and URLs.
+
 ## Individual Contributions
 
 **Sai Thit Swan Thu — Frontend and frontend evidence**
@@ -134,6 +151,16 @@ My relevant Git history is:
 * Checked the schema and seed definitions against the S02 requirements and
   confirmed that Docker Compose mounts both SQL files for database
   initialization.
+* Used Postman to verify that the relevant API endpoints returned the seeded
+  database catalogue and the expected database-backed screening-programme
+  results.
+
+My relevant Git history is:
+
+| Work | Commit |
+|---|---|
+| S02 database schema, catalogue seed, and PostgreSQL support | `22dcb92` (`feat(db): add 20 short films seed, schema columns, and postgres adapters`) |
+| Screening-count bounds and seed documentation | `095dd21` (`feat(db) enforce screening count bounds and document seed data`) |
 
 ## Research or Technology Decisions
 
@@ -161,6 +188,23 @@ I reused the supplied request helper so frontend calls use the same-origin `/api
 The screening-count input is constrained to whole-number values from 1 to 3 in the interface, with visible feedback for invalid input. I also checked the server-side validation separately because client-side validation alone does not demonstrate that an invalid request is rejected by the API.
 
 The scenario requirements in `aa-02-s02.md` were used as the reference for the film and screening-programme workflow. No additional third-party frontend library was introduced for my implementation.
+
+**Lakshya Timsina Chhetri**
+
+I used the project's PostgreSQL and Docker Compose setup to keep the catalogue
+and S02 screening-programme data in persistent tables. I researched and
+adapted the supplied schema for catalogue fields, session-owned programmes,
+programme entries, foreign-key relationships, and constraints. The seed records
+were formatted as JSON-compatible database values and loaded through the  provided
+`database/002-seed.sql`.
+
+I used PostgreSQL data types and constraints rather than application-only
+validation for fields such as the film year, positive runtime, and screening
+count. This keeps invalid rows from entering the database and gives the API a
+consistent persistent source of catalogue and programme data. I also used
+Postman to test the relevant catalogue and screening-programme endpoints
+against the running database-backed application, checking seeded results,
+successful changes, and endpoint responses.
 
 
 ## Academic Integrity and Source Acknowledgement
