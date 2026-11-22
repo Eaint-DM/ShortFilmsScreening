@@ -72,7 +72,20 @@ My relevant Git history is:
 | Screening-programme service tests | `7b40f5a` (`test: cover S02 screening programme workflows`) |
 | Backend API documentation | `3c70b67` (`docs: document S02 backend API`) |
 
+**Lakshya Timsina Chhetri:**
+`Database`
 
+* Adapted `database/001-schema.sql` for the screening-programme data model:
+  catalogue films, session-owned programmes, and programme-film entries.
+* Defined the table keys and foreign-key relationships, including the
+  composite key that prevents duplicate film entries in a programme.
+* Added database constraints for valid film years and positive runtimes, and
+  for screening counts from 1 to 3 inclusive.
+* Updated `database/002-seed.sql` with 20 film catalogue records, including
+  each film's code, title, year, genre, runtime, director, description, and URL researched and picked from the vemio catalogue.
+* Checked the schema and seed definitions against the S02 requirements and
+  confirmed that Docker Compose mounts both SQL files for database
+  initialization.
 
 ## Research or Technology Decisions
 
@@ -85,7 +98,6 @@ I reused the supplied request helper so frontend calls use the same-origin `/api
 The screening-count input is constrained to whole-number values from 1 to 3 in the interface, with visible feedback for invalid input. I also checked the server-side validation separately because client-side validation alone does not demonstrate that an invalid request is rejected by the API.
 
 The scenario requirements in `aa-02-s02.md` were used as the reference for the film and screening-programme workflow. No additional third-party frontend library was introduced for my implementation.
-
 
 
 ## Academic Integrity and Source Acknowledgement
