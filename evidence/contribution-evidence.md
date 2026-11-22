@@ -47,6 +47,7 @@ My relevant Git history is:
 
 The merged branch history is visible in the repository's `main` branch. The commit and pull-request references identify my changes; they do not claim authorship of the backend, database, or configuration implementation.
 
+
 **Contributer:** Lakshya Timsina Chhetri
 **Contribution area:** Data base Schema and Seed.  
 **Work and verification date:** 19 November 2026
@@ -63,6 +64,8 @@ My implementation work is in:
   primary keys, foreign keys, and data constraints.
 - `database/002-seed.sql` — added and formatted 20 seeded catalogue films with
   codes, titles, years, genres, runtimes, directors, descriptions, and URLs.
+
+
 
 ## Individual Contributions
 
